@@ -45,6 +45,7 @@
   },
   "dependencies": {
     "@types/node": "^18.11.18",
-    "vue": "^3.2.36"
+    "vue": "^3.2.36",
+    "vue3-create": "link:"
   }
 }
