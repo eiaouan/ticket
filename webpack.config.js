@@ -7,12 +7,14 @@ const path = require("path");
 module.exports = {
   entry: "./src/index.ts",
   output: {
-    clean: true,
+    publicPath: "/",
   },
+
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "../src"),
+      "@": path.resolve(__dirname, "./src"),
     },
+    extensions: [".ts", ".vue", "..."],
   },
   module: {
     rules: [
@@ -54,15 +56,18 @@ module.exports = {
   mode: "development",
   plugins: [
     new HtmlWebpackPlugin({
-      title: "vue3-create",
+      title: "高铁车票管理系统",
       template: "./index.html",
     }),
     new VueLoaderPlugin(),
   ],
   target: "web",
   devServer: {
+    // contentBase: path.join(__dirname, "src/html"),
     hot: true, // 热跟新
     open: true,
+    port: 3456,
+    historyApiFallback: true,
     proxy: {
       "/api": {
         target: "http://",

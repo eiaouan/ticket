@@ -26,6 +26,7 @@ module.exports = {
     "rules": {
         "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/ban-types": "off",
+    'vue/multi-word-component-names': 'off'
     }
 }
 /* eslint-disable */

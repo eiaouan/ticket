@@ -1,7 +1,5 @@
 <template>
-  <div class="app" title="app">
-    <h1>{{ title }}</h1>
-  </div>
+  <router-view></router-view>
 </template>
 <script lang="ts">
 export default {
@@ -12,8 +10,4 @@ export default {
   },
 };
 </script>
-<style scoped lang="less">
-.app {
-  margin: 0;
-}
-</style>
+<style scoped lang="less"></style>
