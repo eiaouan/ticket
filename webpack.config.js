@@ -55,7 +55,7 @@ module.exports = {
       },
     ],
   },
-  mode: "production",
+  mode: "development",
   plugins: [
     new HtmlWebpackPlugin({
       title: "高铁车票管理系统",

@@ -22,8 +22,8 @@
           </template>
           个人中心
         </a-menu-item>
-        <!--  -->
-        <a-menu-item key="admin" v-if="isAdmin" @click="toLayoutPage('admin')">
+        <!-- v-if="isAdmin" -->
+        <a-menu-item key="admin" @click="toLayoutPage('admin')">
           <template #icon>
             <user-outlined />
           </template>

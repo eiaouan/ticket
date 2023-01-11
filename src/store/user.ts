@@ -34,9 +34,10 @@ export const user = createModule({
         localStorage.setItem("token", res.data.data); // 将token本地存储
         // headers: { Authorization: `Bearer ${token}` } // 在获取信息时添加
         contex.commit("login", res.data.data); // 改变token状态
+        const userInfo = await getUserInfo();
         // 判断是否为管理员
-        contex.commit("SET_ADMIN", res.data.user_identity == 1);
-        console.log(res);
+        contex.commit("SET_ADMIN", userInfo.data.data.user_identity == 1);
+        console.log("管理员", userInfo, this.state);
         return res; // 成功
       } else return res;
     }, // -> dispatch('user/login')

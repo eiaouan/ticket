@@ -30,7 +30,7 @@
     >
       <template #action="{ record }">
         <!-- 通过record.name获取参数 -->
-        <a-button type="danger" @click="hanldDelete(record.id)">删除</a-button>
+        <a-button type="danger" @click="hanldDelete(record)">删除</a-button>
       </template>
     </myTable>
   </div>
@@ -131,7 +131,7 @@ export default {
         message.error(res.data.message);
       }
     };
-    const hanldDelete = (id: number) => {
+    const hanldDelete = (item: any) => {
       // 弹窗
       Modal.confirm({
         title: "确认删除该信息？",
@@ -144,7 +144,12 @@ export default {
         okType: "danger",
         onOk() {
           // 删除车次信息
-          delTrain(id);
+          if (item.cap == item.ticketCount) {
+            // 剩余票数没买
+            delTrain(item.id);
+          } else {
+            message.error("已有车票，不能删除");
+          }
         },
         onCancel() {
           console.log("Cancel");
@@ -159,7 +164,6 @@ export default {
     };
     const addSuccess = () => {
       getTrains();
-
       visible.value = false;
     };
     let dpStationOptions = computed(() => {
