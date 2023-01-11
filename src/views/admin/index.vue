@@ -7,19 +7,30 @@
       type="primary"
       >新增车次</a-button
     >
+    <!-- drawer -->
+    <a-drawer
+      v-model:visible="visible"
+      class="custom-class"
+      style="color: red"
+      title="列车信息"
+      placement="right"
+    >
+      <addTrainForm @addSuccess="addSuccess"></addTrainForm>
+    </a-drawer>
+
     <selectForm
       :arrStationOptions="arrStationOptions"
       :dpStationOptions="dpStationOptions"
       @searchTrain="searchTrain"
     ></selectForm>
     <myTable
-      :dataSource="dataSource"
+      :dataSource="showedTrain"
       :columns="columns"
       @changePage="changePage"
     >
       <template #action="{ record }">
         <!-- 通过record.name获取参数 -->
-        <a-button type="danger" @click="hanldDelete(record.key)">删除</a-button>
+        <a-button type="danger" @click="hanldDelete(record.id)">删除</a-button>
       </template>
     </myTable>
   </div>
@@ -28,11 +39,11 @@
 import { ref, createVNode, onMounted, computed } from "vue";
 import { ExclamationCircleOutlined } from "@ant-design/icons-vue";
 import { message, Modal } from "ant-design-vue";
-import { getData } from "../../api/test";
 import myTable from "@/components/myTable.vue";
 import selectForm from "../index/components/selectForm.vue";
-import { getAllTrains } from "@/api/train";
+import { getAllTrains, deleteTrain } from "@/api/train";
 import dayjs from "dayjs";
+import addTrainForm from "./addTrainForm.vue";
 interface FormState {
   key: number;
   name: string;
@@ -46,6 +57,7 @@ export default {
   components: {
     myTable,
     selectForm,
+    addTrainForm,
   },
   setup() {
     let dataSource = ref([]);
@@ -62,7 +74,7 @@ export default {
         dataIndex: "dpStation",
         key: "dpStation",
         width: 120,
-        col: 3,
+        col: 4,
       },
       {
         title: "目的地",
@@ -102,62 +114,24 @@ export default {
     ];
     let addData = ref<FormState>();
     let modalTitle = ref<string>("新增信息");
-    let allTrains = ref<Array<any>>([
-      {
-        id: 19,
-        createTime: "2023-01-08T05:44:01.000+00:00",
-        updateTime: "2023-01-08T05:44:01.000+00:00",
-        isDeleted: 0,
-        lpNum: "G6313",
-        dpStation: "广州11",
-        arrStation: "厦门11",
-        stopStation: "北京11",
-        cap: 5,
-        dpTime: "2023-01-05 15:40:11",
-        frequeny: "每日1次",
-        price: 100,
-        ticketCount: 100,
-      },
-      {
-        id: 20,
-        createTime: "2023-01-08T06:15:05.000+00:00",
-        updateTime: "2023-01-08T06:15:05.000+00:00",
-        isDeleted: 0,
-        lpNum: "G6313",
-        dpStation: "广11",
-        arrStation: "厦11",
-        stopStation: "北11",
-        cap: 5,
-        dpTime: "2022-01-05 15:40:11",
-        frequeny: "每日1次",
-        price: 100,
-        ticketCount: 100,
-      },
-      {
-        id: 21,
-        createTime: "2023-01-08T06:24:11.000+00:00",
-        updateTime: "2023-01-08T06:24:11.000+00:00",
-        isDeleted: 0,
-        lpNum: "G6313",
-        dpStation: "广11",
-        arrStation: "厦11",
-        stopStation: "北11",
-        cap: 5,
-        dpTime: "2022-01-05 15:40:11",
-        frequeny: "每日1次",
-        price: 100,
-        ticketCount: 100,
-      },
-    ]);
-    const getInfo = async () => {
-      let res = await getData();
-      dataSource.value = res.data;
-      allTrains.value = res.data;
-    };
+    let allTrains = ref<Array<any>>([]);
+    let visible = ref<boolean>(false);
     const handleAdd = () => {
       // 添加
+      visible.value = true;
     };
-    const hanldDelete = (key: string) => {
+    const delTrain = async (id: number) => {
+      let res = await deleteTrain(id);
+      console.log("删除车次", res);
+      if (res.data.status == 20000) {
+        message.success("删除成功");
+        // 刷新页面
+        getTrains(); //获取全部车次信息
+      } else {
+        message.error(res.data.message);
+      }
+    };
+    const hanldDelete = (id: number) => {
       // 弹窗
       Modal.confirm({
         title: "确认删除该信息？",
@@ -169,9 +143,8 @@ export default {
         // ),
         okType: "danger",
         onOk() {
-          dataSource.value = dataSource.value.filter(
-            (item: any) => item.key !== key
-          );
+          // 删除车次信息
+          delTrain(id);
         },
         onCancel() {
           console.log("Cancel");
@@ -181,15 +154,14 @@ export default {
 
       // 确认或者取消
     };
-    // searchInfo
-    let condition = ref([]); // ['计算机学院','20（1）班']
-    const searchInfo = () => {
-      console.log("search");
-    };
     const changePage = (page: number, pageSize: number) => {
       // getData(page, pageSize);
     };
+    const addSuccess = () => {
+      getTrains();
 
+      visible.value = false;
+    };
     let dpStationOptions = computed(() => {
       let update = [];
       for (let item in allTrains.value) {
@@ -224,6 +196,7 @@ export default {
     });
     let loading = ref<boolean>(false);
     let showedTrain = ref<Array<any>>([]);
+
     const searchTrain = ({ dpStation, arrStation, dpTime }: any) => {
       // 搜索
       showedTrain.value = [];
@@ -238,20 +211,21 @@ export default {
           showedTrain.value.push(allTrains.value[index]);
         }
       }
+      message.info("查询成功");
     };
 
     const getTrains = async () => {
       loading.value = true;
       let res = await getAllTrains();
-      allTrains.value = res.data;
+      allTrains.value = res.data.data;
       console.log("所有车次的请求结果", allTrains.value);
       //解析数据，获取所有的城市名称
       loading.value = false;
+      showedTrain.value = allTrains.value;
     };
-    dataSource.value = allTrains.value;
+
     onMounted(() => {
-      getInfo();
-      // getTrains(); 获取全部车次信息
+      getTrains(); //获取全部车次信息
     });
     return {
       dataSource,
@@ -260,12 +234,14 @@ export default {
       modalTitle,
       handleAdd,
       addData,
-      searchInfo,
-      condition,
       changePage,
       dpStationOptions,
       arrStationOptions,
       searchTrain,
+      showedTrain,
+      visible,
+      getTrains,
+      addSuccess,
     };
   },
 };

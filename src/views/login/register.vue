@@ -3,14 +3,18 @@
     <div class="register login">
       <div class="login-title">注册</div>
       <div class="formdata">
-        <input type="text" v-model="formdata.username" placeholder="输入账号" />
+        <input
+          type="text"
+          v-model="formdata.loginName"
+          placeholder="输入账号"
+        />
         <input type="password" v-model="formdata.password" placeholder="密码" />
         <input
           type="password"
           v-model="repeatPassword"
           placeholder="再次输入密码"
         />
-        <input type="text" v-model="formdata.breif" placeholder="用户名" />
+        <input type="text" v-model="formdata.username" placeholder="用户名" />
       </div>
       <div class="login-btn" @click="registerFun">注册</div>
     </div>
@@ -18,19 +22,15 @@
 </template>
 <script lang="ts">
 import { ref } from "vue";
-import { dateFormat } from "@/utils/dateformat";
 import { message } from "ant-design-vue";
 import { register } from "@/api/user";
 import router from "@/router";
 export default {
   setup() {
     let formdata = ref({
+      loginName: "",
       username: "",
       password: "",
-      breif: "",
-      sex: "未知",
-      level: 1,
-      register_time: dateFormat("yyyy-mm-dd"),
     });
     let repeatPassword = ref("");
     let registerFun = async () => {
@@ -51,10 +51,12 @@ export default {
         return;
       }
       let res = await register(formdata.value);
-      if (res.data.msg) {
-        message.info(res.data.msg);
+      if (res.data.status == 20000) {
+        message.success("注册成功");
         // 转跳到登录界面
         router.push("/login");
+      } else {
+        message.error(res.data.message);
       }
     };
     return {

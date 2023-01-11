@@ -27,13 +27,13 @@
         ></a-col>
       </a-row>
     </div>
-    <a-pagination
+    <!-- <a-pagination
       class="pagination"
       v-model:current="current"
       :total="30"
       show-less-items
       @change="changePage"
-    />
+    /> -->
   </div>
 </template>
 <script lang="ts">

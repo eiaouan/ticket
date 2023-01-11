@@ -8,6 +8,8 @@ module.exports = {
   entry: "./src/index.ts",
   output: {
     publicPath: "/",
+    filename: "[name].js", //输入的文件名是什么，生成的文件名也是什么
+    path: path.resolve(__dirname, "../dist"), //指定生成的文件目录
   },
 
   resolve: {
@@ -53,7 +55,7 @@ module.exports = {
       },
     ],
   },
-  mode: "development",
+  mode: "production",
   plugins: [
     new HtmlWebpackPlugin({
       title: "高铁车票管理系统",
@@ -70,7 +72,7 @@ module.exports = {
     historyApiFallback: true,
     proxy: {
       "/api": {
-        target: "http://",
+        target: "http://8.134.208.193:8500",
         changeOrigin: true, // 修改请求头中的host
         secure: false, // 运行代理到https
         pathRewrite: {
@@ -80,28 +82,28 @@ module.exports = {
       },
     },
   },
-  optimization: {
-    splitChunks: {
-      // 选择文件进行拆分，默认是async 只对动态导入的文件进行拆分
-      chunks: "all",
-      // 提取chunk的最小体积
-      minSize: 20000,
-      // 提取chunk的最少引用次数
-      minChunks: 1,
-      // 对要提取的trunk分组
-      cacheGroups: {
-        // 匹配node——modules中的第三方库。打包成一个tunk
-        defaultVendors: {
-          test: /[\\/]node_modules[\\/]/,
-          name: "vendors",
-          priority: -10,
-        },
-        default: {
-          minChunks: 2,
-          name: "default",
-          priority: -20,
-        },
-      },
-    },
-  },
+  // optimization: {
+  //   splitChunks: {
+  //     // 选择文件进行拆分，默认是async 只对动态导入的文件进行拆分
+  //     chunks: "all",
+  //     // 提取chunk的最小体积
+  //     minSize: 20000,
+  //     // 提取chunk的最少引用次数
+  //     minChunks: 1,
+  //     // 对要提取的trunk分组
+  //     cacheGroups: {
+  //       // 匹配node——modules中的第三方库。打包成一个tunk
+  //       defaultVendors: {
+  //         test: /[\\/]node_modules[\\/]/,
+  //         name: "vendors",
+  //         priority: -10,
+  //       },
+  //       default: {
+  //         minChunks: 2,
+  //         name: "default",
+  //         priority: -20,
+  //       },
+  //     },
+  //   },
+  // },
 };

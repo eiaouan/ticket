@@ -11,12 +11,17 @@ const serviceAxios = axios.create({
 // 添加请求拦截器
 serviceAxios.interceptors.request.use(
   (config: any) => {
+    // config.headers["Content-Type"] = "application/x-www-form-urlencoded";
+    config.headers["Content-Type"] = "application/json;charset=utf-8";
     // 在发送请求之前做些什么
+    config.headers["Access-Control-Allow-Methods"] =
+      "GET, POST, PUT, DELETE, OPTIONS";
+    config.headers["Access-Control-Allow-Headers"] =
+      "Origin, Content-Type, Authorization, X-Auth-Token";
     if (localStorage.getItem("token")) {
-      config.headers["Authorization"] = `Bearer ${localStorage.getItem(
-        "token"
-      )}`; // 配置token请求头
+      config.headers["Authorization"] = `${localStorage.getItem("token")}`; // 配置token请求头
     }
+    console.log(config);
     return config;
   },
   function (error) {
@@ -34,6 +39,7 @@ serviceAxios.interceptors.response.use(
     return Promise.resolve(res);
   },
   (error) => {
+    console.log(error);
     let message = "";
     if (error && error.response) {
       switch (error.response.status) {

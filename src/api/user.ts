@@ -11,15 +11,26 @@ export const login = ({
     url: `/user/login`,
     method: "post",
     data: {
-      loginNmae: username,
+      loginName: username,
       password,
     },
   });
 };
+// import axios from "axios";
+// export const login = async (data: any) => {
+//   return axios
+//     .post("/api/user/login", data)
+//     .then(function (response) {
+//       console.log(response);
+//     })
+//     .catch(function (error) {
+//       console.log(error);
+//     });
+// };
 
 export const getUserInfo = () => {
   return http({
-    url: `htt/user/currentUserp`,
+    url: `/user/currentUser`,
     method: "get",
   });
 };
@@ -40,7 +51,7 @@ export const updateUserInfo = (data: any) => {
 export const userLayout = () => {
   return http({
     url: `/user/logout`,
-    method: "post",
+    method: "get",
   });
 };
 
@@ -53,9 +64,15 @@ export const register = ({
   username: string;
   password: string;
 }) => {
+  const data = { loginName, userName: username, password };
   return http({
     url: "/user/register",
     method: "post",
-    data: { loginName, userName: username, password },
+    data: data,
   });
+  // return http.post("/user/register", {
+  //   loginName,
+  //   userName: username,
+  //   password,
+  // });
 };

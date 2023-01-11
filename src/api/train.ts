@@ -19,7 +19,7 @@ export const getTrainById = (id: number) => {
 export const deleteTrain = (id: number) => {
   return http({
     url: `/trainNo/deleteById/${id}`,
-    method: "post",
+    method: "delete",
   });
 };
 

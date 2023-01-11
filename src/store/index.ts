@@ -11,6 +11,7 @@ import { user } from "./user";
 export const store = createStore({
   state: {
     count: 0,
+    navCurrentKey: "index", // 当前所在导航
   },
   modules: {
     user,
@@ -19,6 +20,9 @@ export const store = createStore({
     test() {
       store.state.count++;
       console.log(store.state.count++);
+    },
+    setnavCurrentKey(state, key: string) {
+      state.navCurrentKey = key;
     },
   },
   actions: {

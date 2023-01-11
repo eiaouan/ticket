@@ -14,10 +14,9 @@
       <a-descriptions-item label="列车号">{{ item.lpNum }}</a-descriptions-item>
 
       <a-descriptions-item label="乘坐时间">{{ dpTime }}</a-descriptions-item>
-      <a-descriptions-item v-if="outOfDate">
-        <a-button type="danger" @click="clickRefund(item.trainId)"
-          >退票</a-button
-        >
+      <!-- 超时不允许退票 -->
+      <a-descriptions-item v-if="!outOfDate">
+        <a-button type="danger" @click="clickRefund(item.id)">退票</a-button>
       </a-descriptions-item>
     </a-descriptions>
   </div>
@@ -44,10 +43,11 @@ export default {
         cancelText: "取消",
         onOk: async () => {
           let res = await deleteTicket(trainId);
+          console.log(res);
           if (res.data.status == 20000) {
             message.success("退票成功");
           } else {
-            message.error(res.data.msg);
+            message.error(res.data.message);
           }
         },
       });
@@ -65,7 +65,7 @@ export default {
       }
     };
     onMounted(() => {
-      // isOutOfDate()
+      isOutOfDate();
     });
     return {
       props,

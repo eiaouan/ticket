@@ -22,11 +22,14 @@ let loginFun = async function () {
     username: username.value,
     password: password.value,
   });
-  if (lres.data.status == 2000) {
-    // 为true表示登录成功
+  console.log("结果", lres);
+  if (lres.data.status == 20000) {
+    // 登录成功
+    // 查看用户身份
+
     await router.push("/layout/index");
   } else {
-    message.error(lres.data.msg);
+    message.error(lres.data.message);
   }
 };
 let registerFun = async () => {
@@ -53,8 +56,9 @@ let registerFun = async () => {
 <style scoped lang="less">
 .login-page {
   display: flex;
-  flex-direction: column;
+  // flex-direction: column;
   justify-content: center;
+  align-items: center;
   height: 100%;
 }
 .login {
