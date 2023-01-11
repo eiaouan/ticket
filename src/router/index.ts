@@ -2,7 +2,11 @@
  * 系统的路由配置
  */
 
-import { createWebHistory, createRouter } from "vue-router";
+import {
+  createWebHistory,
+  createRouter,
+  createWebHashHistory,
+} from "vue-router";
 import { message } from "ant-design-vue";
 const routes = [
   {
@@ -47,7 +51,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes,
 });
 

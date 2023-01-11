@@ -3,7 +3,7 @@ import axios from "axios";
 
 // 创建 axios 请求实例
 const serviceAxios = axios.create({
-  baseURL: "/api", // 基础请求地址,在.env中设置，跨域
+  baseURL: "/", // 基础请求地址,在.env中设置，跨域
   timeout: 10000, // 请求超时设置
   //withCredentials: false, // 跨域请求是否需要携带 cookie
 });

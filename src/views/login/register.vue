@@ -17,6 +17,7 @@
         <input type="text" v-model="formdata.username" placeholder="用户名" />
       </div>
       <div class="login-btn" @click="registerFun">注册</div>
+      <div class="login-btn" @click="toLogin">注册</div>
     </div>
   </div>
 </template>
@@ -59,10 +60,13 @@ export default {
         message.error(res.data.message);
       }
     };
+    const toLogin = () => router.push("/login");
+
     return {
       registerFun,
       formdata,
       repeatPassword,
+      toLogin,
     };
   },
 };
@@ -70,8 +74,9 @@ export default {
 <style lang="less" scoped>
 .login-page {
   display: flex;
-  flex-direction: column;
+  // flex-direction: column;
   justify-content: center;
+  align-items: center;
   height: 100%;
 }
 

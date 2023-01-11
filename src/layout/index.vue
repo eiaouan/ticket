@@ -22,8 +22,8 @@
           </template>
           个人中心
         </a-menu-item>
-        <!-- v-if="isAdmin" -->
-        <a-menu-item key="admin" @click="toLayoutPage('admin')">
+        <!--  -->
+        <a-menu-item key="admin" v-if="isAdmin" @click="toLayoutPage('admin')">
           <template #icon>
             <user-outlined />
           </template>
@@ -56,10 +56,8 @@ export default {
     const router = useRouter();
     const store = useStore();
     let isAdmin = ref<boolean>(store.state.user.isAdmin);
-    console.log(isAdmin);
     let rpath = router.currentRoute.value.path;
     let current = ref<string[]>([rpath.split("layout/")[1]]);
-    console.log(current.value);
     const toLayoutPage = (layoutpage: string) => {
       router.push(`/layout/${layoutpage}`);
     };

@@ -23,14 +23,25 @@
       :dpStationOptions="dpStationOptions"
       @searchTrain="searchTrain"
     ></selectForm>
+    <!-- 空状态 -->
+    <a-card v-if="showedTrain.length == 0">
+      <a-empty></a-empty>
+    </a-card>
+
     <myTable
+      v-else
       :dataSource="showedTrain"
       :columns="columns"
       @changePage="changePage"
     >
       <template #action="{ record }">
         <!-- 通过record.name获取参数 -->
-        <a-button type="danger" @click="hanldDelete(record)">删除</a-button>
+        <a-button
+          v-if="record.cap == record.ticketCount"
+          type="danger"
+          @click="hanldDelete(record)"
+          >删除</a-button
+        >
       </template>
     </myTable>
   </div>

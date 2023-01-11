@@ -6,7 +6,11 @@
       @searchTrain="searchTrain"
     ></selectFrom>
     <!-- 车次表 -->
-    <a-card :loading="loading" title="车次">
+    <a-card v-if="showedTrain.length == 0">
+      <a-empty></a-empty>
+    </a-card>
+
+    <a-card v-else :loading="loading" title="车次">
       <div class="train-card" v-for="(item, index) in showedTrain" :key="index">
         <train :item="item">111</train>
       </div>

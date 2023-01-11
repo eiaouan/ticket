@@ -1,7 +1,10 @@
 <template>
   <div>
+    <a-card v-if="myOrders.length == 0">
+      <a-empty></a-empty>
+    </a-card>
     <!-- 待使用，已过期 -->
-    <a-card>
+    <a-card v-else>
       <ticket v-for="(item, index) in myOrders" :key="index" :item="item">
       </ticket>
     </a-card>

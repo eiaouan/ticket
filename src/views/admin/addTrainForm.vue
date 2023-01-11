@@ -33,11 +33,14 @@
     <a-form-item label="经停站" name="stopStation">
       <a-input v-model:value="formState.stopStation" />
     </a-form-item>
-    <a-form-item label="容量" name="cap">
-      <a-input-number v-model:value="formState.cap" />
-    </a-form-item>
-    <a-form-item label="发车时间" name="dpTime">
-      <a-input v-model:value="formState.dpTime" />
+    <a-form-item
+      label="发车时间"
+      name="dpTime"
+      :rules="[{ required: true, message: '到达站不能为空' }]"
+    >
+      <!-- <a-input v-model:value="formState.dpTime" /> -->
+      <a-date-picker v-model:value="dateTime.date"></a-date-picker>
+      <a-time-picker v-model:value="dateTime.time" />
     </a-form-item>
     <a-form-item label="班车频次" name="frequeny">
       <a-input v-model:value="formState.frequeny" />
@@ -57,16 +60,15 @@
       <a-input-number v-model:value="formState.ticketCount" />
     </a-form-item>
     <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
-      <a-button type="primary" html-type="submit" @click="handleAddTrain"
-        >Submit</a-button
-      >
+      <a-button type="primary" html-type="submit">新建</a-button>
     </a-form-item>
   </a-form>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, withCtx } from "vue";
+import { defineComponent, reactive, ref } from "vue";
 import { addTrain } from "@/api/train";
 import { message } from "ant-design-vue";
+import dayjs from "dayjs";
 interface FormState {
   lpNum: string;
   dpStation: string;
@@ -92,8 +94,13 @@ export default defineComponent({
       ticketCount: 0,
     };
     const formState = reactive<FormState>(defaultTrain);
+    const dateTime = ref<any>({
+      date: dayjs(),
+      time: dayjs(),
+    });
     const onFinish = (values: any) => {
       console.log("Success:", values);
+      handleAddTrain();
     };
 
     const onFinishFailed = (errorInfo: any) => {
@@ -101,6 +108,11 @@ export default defineComponent({
     };
     // 插入数据
     const handleAddTrain = async () => {
+      formState.cap = formState.ticketCount; // 当前容量与总票数是一致的
+      formState.dpTime = `${dayjs(dateTime.value.date).format(
+        "YYYY-MM-DD"
+      )} ${dayjs(dateTime.value.time).format("HH:mm:ss")}`;
+      // 如果校验成功
       let res = await addTrain(formState);
       if (res.data.status == 20000) {
         message.success("添加成功");
@@ -115,6 +127,7 @@ export default defineComponent({
       onFinish,
       onFinishFailed,
       handleAddTrain,
+      dateTime,
     };
   },
 });
